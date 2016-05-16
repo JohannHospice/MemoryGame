@@ -2,6 +2,8 @@
     <string name="app_name">Memory Game</string>
     <string name="title_activity_menu">menu</string>
 
+    <string name="github">https://github.com/DVLPS/MemoryGame</string>
+
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>

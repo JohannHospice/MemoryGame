@@ -13,6 +13,7 @@ public class GameOver extends Activity {
     Integer score;
     TextView scoreAffichage;
     Button b_rejouer;
+    Button b_share;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,6 +24,7 @@ public class GameOver extends Activity {
         actionBar.hide();
 
         b_rejouer = (Button) findViewById(R.id.b_rejouer);
+        b_share = (Button) findViewById(R.id.b_share);
 
         score = (Integer) getIntent().getSerializableExtra("score");
         scoreAffichage = (TextView) findViewById((R.id.score));
@@ -35,8 +37,19 @@ public class GameOver extends Activity {
             }
         });
 
+        b_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                share();
+            }
+        });
+    }
 
-
-
+    public void share(){
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Memory Game Score");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Try to beat me in Memory Game ! I did a score of " + score.toString() +  " ! (" + getApplicationContext().getResources().getString(R.string.github) + ")");
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 }

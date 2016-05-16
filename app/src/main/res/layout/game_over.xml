@@ -10,12 +10,22 @@
         android:layout_gravity="center_horizontal|bottom">
 
         <Button
-            android:layout_width="250dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Rejouer"
+            android:text="Share"
+            android:id="@+id/b_share"
+            android:textSize="15dp"
+            android:layout_marginRight="50dp"
+            android:layout_gravity="right|center_vertical" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Play Again"
             android:id="@+id/b_rejouer"
-            android:textSize="25dp"
-            android:layout_gravity="center" />
+            android:layout_marginLeft="50dp"
+            android:textSize="15dp"
+            android:layout_gravity="left|center_vertical" />
     </FrameLayout>
 
     <FrameLayout
