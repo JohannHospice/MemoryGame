@@ -8,9 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-/**
- * Created by qunnamed on 15/05/16.
- */
 public class GameOver extends Activity {
 
     Integer score;
