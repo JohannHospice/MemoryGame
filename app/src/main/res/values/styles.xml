@@ -1,0 +1,23 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="MaterialDarkUgo">
+        <!-- Customize your theme here. -->
+        <item name="android:windowActionBar">true</item>
+         <item name="android:windowNoTitle">false</item>
+
+
+    </style>
+
+    <style name="MaterialDarkUgo" parent="android:Theme.Material" >
+        <item name="android:colorPrimaryDark">@color/primary_dark_material_dark_1</item>
+        <item name="android:colorPrimary">@color/primary_material_dark</item>
+        <item name="android:colorBackground">@color/background_material_dark</item>
+    </style>
+
+    <style name="MaterialUgoNoAction" parent="android:Theme.Material.Dialog.NoActionBar" >
+        <item name="android:colorPrimaryDark">@color/primary_dark_material_dark_2</item>
+        <item name="android:colorPrimary">@color/primary_material_dark</item>
+    </style>
+
+</resources>
