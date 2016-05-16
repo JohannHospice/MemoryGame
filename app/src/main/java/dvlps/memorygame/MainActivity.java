@@ -2,12 +2,12 @@ package dvlps.memorygame;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+
 import java.lang.*;
 
 import android.widget.TextView;
@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends Activity {
+
+    MediaPlayer mainMusic;
 
     Button b_blue, b_red, b_yellow, b_green, b_jouer;
 
@@ -45,6 +47,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mainMusic = MediaPlayer.create(this, R.raw.memory_game);
+        mainMusic.start();
+        mainMusic.setLooping(true);
 
         b_blue = (Button) findViewById(R.id.b_blue);
         b_red = (Button) findViewById(R.id.b_red);
@@ -156,7 +162,8 @@ public class MainActivity extends Activity {
     }
 
     private void GameOver() {
-        gagne = false;
+        mainMusic.stop();
+
         for (Button btn : buttons)
             btn.setEnabled(false);
         final Toast toast = Toast.makeText(MainActivity.this,"GAME OVER !", Toast.LENGTH_SHORT);
@@ -230,5 +237,11 @@ public class MainActivity extends Activity {
         public void exec() {
             run = true;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mainMusic.stop();
     }
 }
