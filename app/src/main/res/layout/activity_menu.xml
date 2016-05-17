@@ -29,15 +29,35 @@
         android:layout_height="match_parent"
         android:weightSum="1">
 
-        <ImageView
-            android:layout_width="331dp"
-            android:layout_height="331dp"
-            android:id="@+id/imageView"
-            android:src="@drawable/logo"
-            android:layout_gravity="top"
-            android:layout_marginLeft="30dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Memory"
+            android:gravity="center"
+            android:layout_marginTop="80dp"
+            android:layout_gravity="center"
+            android:textAllCaps="true"
+            android:textIsSelectable="false"
+            android:textStyle="bold"
+            android:typeface="normal"
+            android:visibility="visible"
+            android:textSize="80dp" />
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="127dp"
+            android:text="Game"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textAllCaps="true"
+            android:textIsSelectable="false"
+            android:textStyle="bold"
+            android:typeface="normal"
+            android:visibility="visible"
+            android:textSize="80dp"
+            />
+
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
@@ -45,25 +65,30 @@
             android:layout_gravity="bottom">
 
             <Button
-                android:id="@+id/btn_easy"
+                android:id="@+id/btn_hard"
                 android:layout_width="100dp"
                 android:layout_height="70dp"
-                android:text="Easy"
-                android:layout_margin="14dp" />
+                android:text="Hard"
+                android:layout_margin="14dp"
+                android:layout_gravity="right|center_vertical" />
+
             <Button
                 android:id="@+id/btn_medium"
                 android:layout_width="100dp"
                 android:layout_height="70dp"
                 android:text="Medium"
-                android:layout_margin="14dp"/>
+                android:layout_margin="14dp"
+                android:layout_gravity="center" />
+
             <Button
-                android:id="@+id/btn_hard"
+                android:id="@+id/btn_easy"
                 android:layout_width="100dp"
                 android:layout_height="70dp"
-                android:text="Hard"
-                android:layout_margin="14dp"/>
+                android:text="Easy"
+                android:layout_margin="14dp"
+                android:layout_gravity="left|center_vertical" />
 
-        </LinearLayout>
+        </FrameLayout>
 
 
     </LinearLayout>
