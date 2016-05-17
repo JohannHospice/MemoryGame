@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/medium"
-        android:title="Medium" />
+        android:title="Mediumd" />
 
     <item
         android:id="@+id/hard"
