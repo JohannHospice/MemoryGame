@@ -1,0 +1,71 @@
+<!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="dvlps.memorygame.menu">
+
+    <!-- As the main content view, the view below consumes the entire
+         space available using match_parent in both dimensions. -->
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- The drawer is given a fixed width in dp and extends the full height of
+         the container. -->
+    <fragment
+        android:id="@+id/navigation_drawer"
+        android:name="dvlps.memorygame.NavigationDrawerFragment"
+        android:layout_width="@dimen/navigation_drawer_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        tools:layout="@layout/drawer_menu" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1">
+
+        <ImageView
+            android:layout_width="331dp"
+            android:layout_height="331dp"
+            android:id="@+id/imageView"
+            android:src="@drawable/logo"
+            android:layout_gravity="top"
+            android:layout_marginLeft="30dp"/>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="bottom">
+
+            <Button
+                android:id="@+id/btn_easy"
+                android:layout_width="100dp"
+                android:layout_height="70dp"
+                android:text="Easy"
+                android:layout_margin="14dp" />
+            <Button
+                android:id="@+id/btn_medium"
+                android:layout_width="100dp"
+                android:layout_height="70dp"
+                android:text="Medium"
+                android:layout_margin="14dp"/>
+            <Button
+                android:id="@+id/btn_hard"
+                android:layout_width="100dp"
+                android:layout_height="70dp"
+                android:text="Hard"
+                android:layout_margin="14dp"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</android.support.v4.widget.DrawerLayout>

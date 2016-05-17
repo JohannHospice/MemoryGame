@@ -17,22 +17,22 @@ import java.util.Random;
 
 public class MainActivity extends Activity {
 
-    MediaPlayer mainMusic;
-
     Button b_blue, b_red, b_yellow, b_green, b_jouer;
 
     ArrayList<Integer> cpuChoices = new ArrayList<Integer>();
     ArrayList<Button>  buttons = new ArrayList<Button>();
 
-    melodieASuivre melodie = new melodieASuivre();
+    melodieASuivre melodie;
 
     Handler handler = new Handler();
 
     Random r;
 
-    Integer compteur=0;
+    Double vitesse;
 
-    Boolean gagne;
+    String niveau;
+
+    Integer compteur=0;
 
     Button b_blue_bis;
     Button b_red_bis;
@@ -48,10 +48,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainMusic = MediaPlayer.create(this, R.raw.memory_game);
-        mainMusic.start();
-        mainMusic.setLooping(true);
-
         b_blue = (Button) findViewById(R.id.b_blue);
         b_red = (Button) findViewById(R.id.b_red);
         b_green = (Button) findViewById(R.id.b_green);
@@ -65,6 +61,11 @@ public class MainActivity extends Activity {
         buttons.add(b_red);
         buttons.add(b_yellow);
         buttons.add(b_green);
+
+        vitesse = (Double) getIntent().getSerializableExtra("vitesse");
+        niveau = (String) getIntent().getSerializableExtra("niveau");
+
+        melodie = new melodieASuivre(vitesse);
 
 
         r = new Random();
@@ -90,6 +91,7 @@ public class MainActivity extends Activity {
                 cpuChoices.clear();
                 melodie.start();
                 melodie.exec();
+
 
                 scoreAffiche.setText("Score : ");
 
@@ -162,7 +164,6 @@ public class MainActivity extends Activity {
     }
 
     private void GameOver() {
-        mainMusic.stop();
 
         for (Button btn : buttons)
             btn.setEnabled(false);
@@ -170,13 +171,18 @@ public class MainActivity extends Activity {
         toast.show();
         Intent intent = new Intent(MainActivity.this, GameOver.class);
         intent.putExtra("score", score);
+        intent.putExtra("niveau", niveau);
         startActivity(intent);
     }
 
 
     public class melodieASuivre extends Thread {
         private boolean run = false;
-        private int vitesse = 1;
+        private double vitesse = 1;
+
+        public melodieASuivre(Double vitesse) {
+            this.vitesse = vitesse;
+        }
 
         public void run() {
             super.run();
@@ -215,14 +221,14 @@ public class MainActivity extends Activity {
 
         public void pause(final int b) {
             try {
-                Thread.sleep(500 / vitesse);
+                Thread.sleep((long) (500 / vitesse));
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
                         buttons.get(b).setPressed(true);
                     }
                 });
-                Thread.sleep(1000 / vitesse);
+                Thread.sleep((long) (1000 / vitesse));
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -237,11 +243,5 @@ public class MainActivity extends Activity {
         public void exec() {
             run = true;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        mainMusic.stop();
     }
 }
