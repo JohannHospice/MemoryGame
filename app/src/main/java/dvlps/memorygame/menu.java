@@ -164,4 +164,17 @@ public class menu extends Activity
         super.onBackPressed();
         mainMusic.stop();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mainMusic.pause();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mainMusic.start();
+        mainMusic.setLooping(true);
+    }
 }
