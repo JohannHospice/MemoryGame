@@ -37,7 +37,7 @@ public class menu extends Activity
         setContentView(R.layout.activity_menu);
 
 
-        mainMusic = MediaPlayer.create(this, R.raw.memory_game);
+        mainMusic = MediaPlayer.create(this, R.raw.memory_game_music);
         mainMusic.start();
         mainMusic.setLooping(true);
 
