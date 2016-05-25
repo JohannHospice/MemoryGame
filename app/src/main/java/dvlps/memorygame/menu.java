@@ -25,9 +25,7 @@ public class menu extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-    private Button btn_easy, btn_medium, btn_hard;
-    private double vitesse = 1;
-    private String niveau;
+    private Button btn_1player, btn_2players;
 
     MediaPlayer mainMusic;
 
@@ -41,6 +39,9 @@ public class menu extends Activity
         mainMusic.start();
         mainMusic.setLooping(true);
 
+        btn_1player = (Button) findViewById(R.id.btn_1player);
+        btn_2players = (Button) findViewById(R.id.btn_2players);
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -50,34 +51,17 @@ public class menu extends Activity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        btn_easy = (Button) findViewById(R.id.btn_easy);
-        btn_medium = (Button) findViewById(R.id.btn_medium);
-        btn_hard = (Button) findViewById(R.id.btn_hard);
-
-        btn_easy.setOnClickListener(new View.OnClickListener() {
+        btn_1player.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                vitesse = 1.5;
-                niveau = "easy";
-                jouer();
+                choixSolo();
             }
         });
 
-        btn_medium.setOnClickListener(new View.OnClickListener() {
+        btn_2players.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                vitesse = 2.5;
-                niveau = "medium";
-                jouer();
-            }
-        });
-
-        btn_hard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                vitesse = 3.5;
-                niveau = "hard";
-                jouer();
+                choixMulti();
             }
         });
     }
@@ -152,14 +136,6 @@ public class menu extends Activity
         }
     }
 
-    public void jouer() {
-        mainMusic.stop();
-        Intent intent = new Intent(menu.this, MainActivity.class);
-        intent.putExtra("vitesse", vitesse);
-        intent.putExtra("niveau", niveau);
-        startActivity(intent);
-    }
-
     public void onBackPressed() {
         super.onBackPressed();
         mainMusic.stop();
@@ -176,5 +152,17 @@ public class menu extends Activity
         super.onRestart();
         mainMusic.start();
         mainMusic.setLooping(true);
+    }
+
+    public void choixSolo() {
+        mainMusic.stop();
+        Intent intent = new Intent(menu.this, menuNiveau.class);
+        startActivity(intent);
+    }
+
+    public void choixMulti() {
+        mainMusic.stop();
+        Intent intent = new Intent(menu.this, menuMulti.class);
+        startActivity(intent);
     }
 }
