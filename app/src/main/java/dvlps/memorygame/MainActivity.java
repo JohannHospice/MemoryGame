@@ -2,7 +2,6 @@ package dvlps.memorygame;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Bundle;
 import android.view.View;
@@ -12,223 +11,155 @@ import java.lang.*;
 
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends Activity {
 
-    Button b_blue, b_red, b_yellow, b_green, b_jouer;
-
-    ArrayList<Integer> cpuChoices = new ArrayList<Integer>();
-    ArrayList<Button>  buttons = new ArrayList<Button>();
-
-    melodieASuivre melodie;
-
-    Handler handler = new Handler();
-
-    Random r;
-
-    Double vitesse;
-
-    String niveau;
-
-    Integer compteur=0;
-
-    Button b_blue_bis;
-    Button b_red_bis;
-    Button b_yellow_bis;
-    Button b_green_bis;
-
-    TextView scoreAffiche;
-    int score = 0;
-
+    private ArrayList<Integer> sequence = new ArrayList<>();
+    private ArrayList<Button> buttons = new ArrayList<>();
+    private Handler handler = new Handler();
+    private Random random = new Random();
+    private Button playButton;
+    private Computer computer;
+    private Integer currentIndex = 0;
+    private TextView scoreTextInput;
+    private int score = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        computer = new Computer((float) getIntent().getSerializableExtra("vitesse"));
+
         setContentView(R.layout.activity_main);
 
-        b_blue = (Button) findViewById(R.id.b_blue);
-        b_red = (Button) findViewById(R.id.b_red);
-        b_green = (Button) findViewById(R.id.b_green);
-        b_yellow = (Button) findViewById(R.id.b_yellow);
-        b_jouer = (Button) findViewById(R.id.b_jouer);
+        scoreTextInput = (TextView) findViewById(R.id.score);
 
-        scoreAffiche = (TextView) findViewById(R.id.score);
-
-        buttons.clear();
-        buttons.add(b_blue);
-        buttons.add(b_red);
-        buttons.add(b_yellow);
-        buttons.add(b_green);
-
-        vitesse = (Double) getIntent().getSerializableExtra("vitesse");
-        niveau = (String) getIntent().getSerializableExtra("niveau");
-
-        melodie = new melodieASuivre(vitesse);
-
-
-        r = new Random();
-
-        //On bloque les boutons tant qu'on a pas appuyé sur le bouton jouer
-        b_blue.setEnabled(false);
-        b_red.setEnabled(false);
-        b_green.setEnabled(false);
-        b_yellow.setEnabled(false);
-
-        b_blue_bis = b_blue;
-        b_red_bis = b_red;
-        b_yellow_bis = b_yellow;
-        b_green_bis = b_green;
-
-        b_jouer.setOnClickListener(new View.OnClickListener() {
+        playButton = (Button) findViewById(R.id.b_jouer);
+        playButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
-                b_jouer.setEnabled(false);
-                score = 0;
-                compteur = 0;
-                cpuChoices.clear();
-                melodie.start();
-                melodie.exec();
-
-
-                scoreAffiche.setText("Score : ");
-
-                for (int btn : cpuChoices)
-                    System.out.println(btn);
-
-
-                final Toast toast = Toast.makeText(MainActivity.this, "Let's Play !", Toast.LENGTH_SHORT);
-                toast.show();
-
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        toast.cancel();
-                    }
-                }, 1000);
-
-                for (int i = 0; i<buttons.size(); i++){
-                    final int finali = i;
-                    buttons.get(i).setOnClickListener(new View.OnClickListener(){
-                        @Override
-                        public void onClick(View v) {
-                            if (comparaisonRep(finali)) {
-                                melodie.exec();
-                                final Toast toast = Toast.makeText(MainActivity.this,"A moi de jouer !", Toast.LENGTH_SHORT);
-                                toast.show();
-
-                                Handler handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                 @Override
-                                 public void run() {
-                                     toast.cancel();
-                                 }
-                                }, 500);
-                            }
-                        }
-                    });
-                }
-
-                scoreMAJ();
-            }
-
+            public void onClick(View v) {startGame();}
         });
 
+        buttons.add((Button) findViewById(R.id.b_blue));
+        buttons.add((Button) findViewById(R.id.b_red));
+        buttons.add((Button) findViewById(R.id.b_green));
+        buttons.add((Button) findViewById(R.id.b_yellow));
 
-    }
-
-    public void scoreMAJ(){
-        scoreAffiche.setText("Score : " + score);
-    }
-
-
-    public boolean comparaisonRep(int nbBtn) {
-        if (nbBtn == cpuChoices.get(compteur)) {
-            if (compteur == cpuChoices.size() - 1) {
-                compteur = 0;
-                score++;
-                scoreMAJ();
-                return true;
-            }
-            compteur++;
-        } else {
-            System.out.println("perdu");
-            GameOver();
+        for (int i = 0; i < buttons.size(); i++) {
+            buttons.get(i).setEnabled(false);
+            buttons.get(i).setOnClickListener(getButtonClickListener(i));
         }
-
-        return false;
     }
 
-    private void GameOver() {
+    public View.OnClickListener getButtonClickListener(final int numButton) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (numButton == sequence.get(currentIndex))
+                    if (currentIndex == sequence.size() - 1) {
+                        currentIndex = 0;
+                        score++;
+                        updateScore();
+                    } else {
+                        currentIndex++;
+                        computer.restart();
+                        Toast.makeText(MainActivity.this, "A moi de jouer !", Toast.LENGTH_SHORT).show();
+                    }
+                else
+                    endGame();
+            }
+        };
+    }
 
+    public void setEnablabledAllButtons(boolean enable) {
         for (Button btn : buttons)
-            btn.setEnabled(false);
-        final Toast toast = Toast.makeText(MainActivity.this,"GAME OVER !", Toast.LENGTH_SHORT);
-        toast.show();
+            btn.setEnabled(enable);
+    }
+
+    private void startGame(){
+        playButton.setEnabled(false);
+        score = 0;
+        currentIndex = 0;
+        updateScore();
+        sequence.clear();
+        computer.start();
+        Toast.makeText(MainActivity.this, "Let's Play !", Toast.LENGTH_SHORT).show();
+    }
+
+    private void endGame() {
+        setEnablabledAllButtons(false);
+        Toast.makeText(MainActivity.this, "GAME OVER !", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(MainActivity.this, GameOver.class);
         intent.putExtra("score", score);
-        intent.putExtra("niveau", niveau);
         startActivity(intent);
     }
 
+    public void updateScore() {
+        scoreTextInput.setText("Score : " + score);
+    }
 
-    public class melodieASuivre extends Thread {
-        private boolean run = false;
-        private double vitesse = 1;
+    public class Computer extends Thread {
+        private boolean run = true;
+        private float speed = 1;
 
-        public melodieASuivre(Double vitesse) {
-            this.vitesse = vitesse;
+        public Computer(float speed) {
+            this.speed = speed;
         }
 
+        @Override
         public void run() {
             super.run();
-            while (true) {
+            while (true)
                 if (run) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            for (Button btn : buttons)
-                                btn.setEnabled(false);
+                            setEnablabledAllButtons(false);
                         }
                     });
-                    for (int i = 0; i < cpuChoices.size(); i++) {
-                        pause(cpuChoices.get(i));
-                    }
-                    int random = r.nextInt(4);
-                    cpuChoices.add(random);
-                    pause(random);
-
+                    runSequence();
+                    addToSequence(random.nextInt(4));
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            for (Button btn : buttons)
-                                btn.setEnabled(true);
+                            setEnablabledAllButtons(true);
                         }
                     });
                     run = false;
-
-
-
                 }
-
-            }
         }
 
+        @Override
+        public synchronized void start() {
+            super.start();
+        }
 
-        public void pause(final int b) {
+        public void restart() {
+            run = true;
+        }
+
+        private void runSequence() {
+            for (int choice : sequence)
+                pressButton(choice);
+        }
+
+        private void addToSequence(int numButton) {
+            pressButton(numButton);
+            sequence.add(numButton);
+        }
+
+        private void pressButton(final int b) {
             try {
-                Thread.sleep((long) (500 / vitesse));
+                Thread.sleep((long) (500 / speed));
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
                         buttons.get(b).setPressed(true);
                     }
                 });
-                Thread.sleep((long) (1000 / vitesse));
+                Thread.sleep((long) (1000 / speed));
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -240,8 +171,8 @@ public class MainActivity extends Activity {
             }
         }
 
-        public void exec() {
-            run = true;
+        public void setSpeed(float speed) {
+            this.speed = speed;
         }
     }
 }
