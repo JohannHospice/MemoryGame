@@ -13,7 +13,7 @@ public class menuNiveau extends Activity {
     private Button btn_easy, btn_medium, btn_hard;
     private double vitesse = 1;
     private String niveau;
-
+    private int nbJoueur=1;
     MediaPlayer mainMusic;
 
     @Override
@@ -63,6 +63,7 @@ public class menuNiveau extends Activity {
         Intent intent = new Intent(menuNiveau.this, MainActivity.class);
         intent.putExtra("vitesse", vitesse);
         intent.putExtra("niveau", niveau);
+        intent.putExtra("nbPlayer", nbJoueur);
         startActivity(intent);
     }
 }

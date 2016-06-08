@@ -19,19 +19,22 @@ public class MainActivity extends Activity {
 
     private ArrayList<Integer> sequence = new ArrayList<>();
     private ArrayList<Button> buttons = new ArrayList<>();
+    private TextView scoreTextInput;
+    private Button playButton;
     private Handler handler = new Handler();
     private Random random = new Random();
-    private Button playButton;
     private Computer computer;
-    private Integer currentIndex = 0;
-    private TextView scoreTextInput;
+    private int currentSequenceIndex = 0;
+    private int nbPlayer = 1;
+    private int currentPlayer = 0;
     private int score = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        computer = new Computer((float) getIntent().getSerializableExtra("vitesse"));
 
+        nbPlayer = (int) getIntent().getSerializableExtra("nbPlayer");
+        computer = new Computer((float) getIntent().getSerializableExtra("vitesse"));
         setContentView(R.layout.activity_main);
 
         scoreTextInput = (TextView) findViewById(R.id.score);
@@ -39,7 +42,9 @@ public class MainActivity extends Activity {
         playButton = (Button) findViewById(R.id.b_jouer);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {startGame();}
+            public void onClick(View v) {
+                startGame();
+            }
         });
 
         buttons.add((Button) findViewById(R.id.b_blue));
@@ -57,20 +62,32 @@ public class MainActivity extends Activity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (numButton == sequence.get(currentIndex))
-                    if (currentIndex == sequence.size() - 1) {
-                        currentIndex = 0;
+                if (numButton == sequence.get(currentSequenceIndex))
+                    if (currentSequenceIndex == sequence.size() - 1) {
+                        currentSequenceIndex = 0;
                         score++;
                         updateScore();
-                    } else {
-                        currentIndex++;
-                        computer.restart();
-                        Toast.makeText(MainActivity.this, "A moi de jouer !", Toast.LENGTH_SHORT).show();
-                    }
+                        incrementCurrentPlayer();
+                        if(currentPlayer > 0)
+                            Toast.makeText(MainActivity.this, "TURN TO PLAYER" + currentPlayer, Toast.LENGTH_SHORT).show();
+                        {
+                            computer.restart();
+                            Toast.makeText(MainActivity.this, "TURN TO COMPUTER", Toast.LENGTH_SHORT).show();
+                        }
+                    } else
+                        currentSequenceIndex++;
                 else
                     endGame();
             }
         };
+    }
+
+    /**
+     * Increment the value of the current player according with the number of player
+     * the computer is count like the number 0 player
+     */
+    private void incrementCurrentPlayer(){
+        currentPlayer = (currentPlayer + 1) % (nbPlayer+1);
     }
 
     public void setEnablabledAllButtons(boolean enable) {
@@ -78,19 +95,19 @@ public class MainActivity extends Activity {
             btn.setEnabled(enable);
     }
 
-    private void startGame(){
+    private void startGame() {
         playButton.setEnabled(false);
         score = 0;
-        currentIndex = 0;
-        updateScore();
+        currentSequenceIndex = 0;
         sequence.clear();
         computer.start();
-        Toast.makeText(MainActivity.this, "Let's Play !", Toast.LENGTH_SHORT).show();
+        updateScore();
+        Toast.makeText(MainActivity.this, "LET'S PLAY", Toast.LENGTH_SHORT).show();
     }
 
     private void endGame() {
         setEnablabledAllButtons(false);
-        Toast.makeText(MainActivity.this, "GAME OVER !", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "PLAYER " + currentPlayer + " IS OVER", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(MainActivity.this, GameOver.class);
         intent.putExtra("score", score);
         startActivity(intent);
@@ -127,6 +144,8 @@ public class MainActivity extends Activity {
                             setEnablabledAllButtons(true);
                         }
                     });
+                    incrementCurrentPlayer();
+                    Toast.makeText(MainActivity.this, "TURN TO PLAYER" + currentPlayer, Toast.LENGTH_SHORT).show();
                     run = false;
                 }
         }
