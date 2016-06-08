@@ -68,9 +68,9 @@ public class MainActivity extends Activity {
                         score++;
                         updateScore();
                         incrementCurrentPlayer();
-                        if(currentPlayer > 0)
+                        if (currentPlayer > 0)
                             Toast.makeText(MainActivity.this, "TURN TO PLAYER" + currentPlayer, Toast.LENGTH_SHORT).show();
-                        {
+                        else {
                             computer.restart();
                             Toast.makeText(MainActivity.this, "TURN TO COMPUTER", Toast.LENGTH_SHORT).show();
                         }
@@ -86,8 +86,8 @@ public class MainActivity extends Activity {
      * Increment the value of the current player according with the number of player
      * the computer is count like the number 0 player
      */
-    private void incrementCurrentPlayer(){
-        currentPlayer = (currentPlayer + 1) % (nbPlayer+1);
+    private void incrementCurrentPlayer() {
+        currentPlayer = (currentPlayer + 1) % (nbPlayer + 1);
     }
 
     public void setEnablabledAllButtons(boolean enable) {
@@ -145,8 +145,8 @@ public class MainActivity extends Activity {
                         }
                     });
                     incrementCurrentPlayer();
-// TODO: create handler to manage the toast
-//                    Toast.makeText(MainActivity.this, "TURN TO PLAYER" + currentPlayer, Toast.LENGTH_SHORT).show();
+                    // TODO: create handler to manage the toast
+                    // Toast.makeText(MainActivity.this, "TURN TO PLAYER" + currentPlayer, Toast.LENGTH_SHORT).show();
                     run = false;
                 }
         }
