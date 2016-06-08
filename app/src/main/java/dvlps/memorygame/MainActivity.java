@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         nbPlayer = (int) getIntent().getSerializableExtra("nbPlayer");
-        computer = new Computer((float) getIntent().getSerializableExtra("vitesse"));
+        computer = new Computer((double) getIntent().getSerializableExtra("vitesse"));
         setContentView(R.layout.activity_main);
 
         scoreTextInput = (TextView) findViewById(R.id.score);
@@ -119,9 +119,9 @@ public class MainActivity extends Activity {
 
     public class Computer extends Thread {
         private boolean run = true;
-        private float speed = 1;
+        private double speed = 1;
 
-        public Computer(float speed) {
+        public Computer(double speed) {
             this.speed = speed;
         }
 
@@ -145,7 +145,8 @@ public class MainActivity extends Activity {
                         }
                     });
                     incrementCurrentPlayer();
-                    Toast.makeText(MainActivity.this, "TURN TO PLAYER" + currentPlayer, Toast.LENGTH_SHORT).show();
+// TODO: create handler to manage the toast
+//                    Toast.makeText(MainActivity.this, "TURN TO PLAYER" + currentPlayer, Toast.LENGTH_SHORT).show();
                     run = false;
                 }
         }
